@@ -41,10 +41,10 @@ class WhileMachine:
 	def compile_ram(self, program):
 		self._parse(program.lower())
 		self._ram = []
-		self._jumps = []
+		self._jump = 0
 		for cmd in self._program:
 			self._compile_command(cmd)
-		if max(self._jumps,default=0) > len(self._ram):
+		if self._jump > len(self._ram):
 			self._ram.append('dec 21')
 		return '\n'.join(self._ram)
 
@@ -84,8 +84,9 @@ class WhileMachine:
 			self._ram.append(None)
 			self._compile_command(cmd[2])	
 			self._ram.append(f'jz 21 {i+1}')
-			self._jumps.append(len(self._ram)+1)
-			self._ram[i] = f'jz {cmd[1]} {self._jumps[-1]}'
+			dest = len(self._ram)+1
+			self._jump = max(self._jump, dest)
+			self._ram[i] = f'jz {cmd[1]} {dest}'
 		elif cmd[0] == 'begin':
 			for c in cmd[1]:
 				self._compile_command(c)
