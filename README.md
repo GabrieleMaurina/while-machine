@@ -3,6 +3,8 @@ While Abstract Machine implemented in python.
 
 While Machine is an abstract machine that is turing complete and can compute any partial recursive function. Find out more here https://en.wikipedia.org/wiki/Abstract_machine
 
+Its simpler brother is called Random Access Machine and you can find its implementation here https://github.com/GabrieleMaurina/random-access-machine
+
 ### Install
 
 Run inside terminal:
@@ -76,3 +78,23 @@ begin
 end
 ```
 
+### RAM compiler
+
+It is possible to compile a While program into a Ram program using the method compile_ram of the class WhileMachine. You can find an implementation of the ram machine here https://github.com/GabrieleMaurina/random-access-machine
+
+Here is an example of how to compile from While to RAM:
+
+```python
+from while_machine import WhileMachine
+import sys
+
+def main():
+	wm = WhileMachine()
+	with open(sys.argv[1],'r') as while_prog, open(sys.argv[2],'w') as ram_prog:
+		while_prog = while_prog.read()
+		compiled = wm.compile_ram(while_prog)
+		ram_prog.write(compiled)
+
+if __name__ == '__main__':
+	main()
+```
