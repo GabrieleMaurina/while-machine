@@ -4,10 +4,11 @@ import pyparsing as pp
 class WhileMachine:
 	def __init__(self):
 		cmd = pp.Forward()
-		inc = pp.Group('inc' + pp.Word(pp.nums))
-		dec = pp.Group('dec' + pp.Word(pp.nums))
-		zero = pp.Group('zero' + pp.Word(pp.nums))
-		wz = pp.Group('while' + pp.Word(pp.nums) + cmd)
+		reg = pp.Word(pp.nums).setParseAction(lambda toks: int(toks[0])).addCondition(lambda toks: toks[0]<21)
+		inc = pp.Group('inc' + reg)
+		dec = pp.Group('dec' + reg)
+		zero = pp.Group('zero' + reg)
+		wz = pp.Group('while' + reg + cmd)
 		block = pp.Group('begin' + pp.Group(cmd[...]) + 'end')
 		cmd <<=  inc | dec | zero | wz | block
 		self._parser = cmd
@@ -24,13 +25,13 @@ class WhileMachine:
 
 	def _compute_command(self,cmd):
 		if cmd[0] == 'inc':
-			self._registers[int(cmd[1])] += 1
+			self._registers[cmd[1]] += 1
 		elif cmd[0] == 'dec':
-			self._registers[int(cmd[1])] = max(0, self._registers[int(cmd[1])]-1)
+			self._registers[cmd[1]] = max(0, self._registers[cmd[1]]-1)
 		elif cmd[0] == 'zero':
-			self._registers[int(cmd[1])] = 0
+			self._registers[cmd[1]] = 0
 		elif cmd[0] == 'while':
-			while self._registers[int(cmd[1])]:
+			while self._registers[cmd[1]]:
 				self._compute_command(cmd[2])	
 		elif cmd[0] == 'begin':
 			for c in cmd[1]:
