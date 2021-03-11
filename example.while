@@ -1,0 +1,6 @@
+while 1
+begin
+	inc 0
+	inc 0
+	dec 1
+end
